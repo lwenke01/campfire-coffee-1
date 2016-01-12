@@ -2,9 +2,14 @@
 body {
   background-color: #eeebbb;
 }
-h2 {
+h1, h2, h3 {
   font-family: Verdana;
 }
 p {
   font-family: Verdana;
+}
+table, td {
+    border: 2px solid #889977;
+    padding: 3px;
+    font-family: Verdana;
 }
