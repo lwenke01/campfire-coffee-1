@@ -94,8 +94,70 @@ var caphill = {
 
 };
 
+function CoffeeShop(shopName, minCust, maxCust, cupsCustAvg, lbsCustAvg) {
+  this.shopName = shopName;
+  this.minCust = minCust;
+  this.maxCust = maxCust;
+  this.cupsCustAvg = cupsCustAvg;
+  this.lbsCustAvg = lbsCustAvg;
+  this.hourlyCust = [];
+  this.hourlyCups = [];
+  this.hourlyLbsFromCups = [];
+  this.hourlyLbsFromBeanSales = [];
+  this.totalHourlyLbsBeans = [];
+}
+
+CoffeeShop.prototype.randCust = function() {
+  for (var i = 0; i < openTimes.length; i++) {
+    this.hourlyCust.push(Math.floor(Math.random() * (this.maxCust - this.minCust) + this.minCust));
+  }
+}
+
+CoffeeShop.prototype.genHourlyCups = function() {
+  for (var i = 0; i < this.hourlyCust.length; i++) {
+    this.hourlyCups.push(Math.round(this.cupsCustAvg * this.hourlyCust[i]));
+  }
+}
+
+CoffeeShop.prototype.genHourlyLbsFromCups = function() {
+  for (var i = 0; i < this.hourlyCups.length; i++) {
+    this.hourlyLbsFromCups.push(Math.round(this.hourlyCups[i] / 20));
+  }
+}
+
+CoffeeShop.prototype.genHourlyLbsFromBeanSales = function() {
+  for (var i = 0; i < this.hourlyCust.length; i++) {
+    this.hourlyLbsFromBeanSales.push(Math.round(this.lbsCustAvg * this.hourlyCust[i]));
+  }
+}
+
+CoffeeShop.prototype.sumCupBeans = function() {
+  function add(a, b) {
+    return a + b;
+  }
+  this.totalHourlyLbsBeans.push(this.hourlyLbsFromCups.reduce(add, 0));
+}
+
+CoffeeShop.prototype.sumSalesBeans = function() {
+  function add(a, b) {
+    return a + b;
+  }
+  this.totalHourlyLbsBeans.push(this.hourlyLbsFromBeanSales.reduce(add, 0));
+}
+
+CoffeeShop.prototype.superTotalHourlyLbsBeans = function() {
+  function add(a, b) {
+    return a + b;
+  }
+  return this.totalHourlyLbsBeans.reduce(add, 0);
+}
+
+var seatac = new CoffeeShop("SeaTac", 68, 124, 1.1, 2.7);
+
+console.log(seatac.shopName, seatac.minCust, seatac.maxCust, seatac.cupsCustAvg, seatac.lbsCustAvg);
+
 var publibrary = {
-  shopName: 'Capitol Hill',
+  shopName: 'Seattle Public Library',
   maxCust: 48,
   minCust: 32,
   hourlyCust: [],
@@ -135,14 +197,14 @@ var publibrary = {
     function add(a, b) {
       return a + b;
     }
-    return this.hourlyLbsFromCups.reduce(add, 0);
+    this.totalDailyCups.push(this.hourlyLbsFromCups.reduce(add, 0));
   },
 
   sumSalesBeans: function() {
     function add(a, b) {
       return a + b;
     }
-    return this.hourlyLbsFromBeanSales.reduce(add, 0);
+    this.totalDailyCups.push(this.hourlyLbsFromBeanSales.reduce(add, 0));
   },
 
   totalDailyCups: false,
